@@ -12,28 +12,6 @@ This project is an Authentication Template built using Laravel Jetstream, Inerti
 -   **Form Handling:** Inertia.js
 -   **UI Components:** NextUI
 
-## Project Structure
-
-### `app/Http/Controllers`
-
--   **OfficeController**: Handles operations related to offices.
-
-### `resources/js/Components`
-
--   **`AppNavbar`**: The main navigation bar of the application.
--   **`SideNavbar`**: The sidebar navigation component.
--   **`NavItems`**: Component for rendering navigation items.
-
-### `resources/js/Forms`
-
--   **`LoginForm`**: Component for user login.
--   **`RegisterForm`**: Component for user registration.
-
-### `resources/js/Utils`
-
--   **`constants.jsx`**: Contains global constants used throughout the project.
--   **`icons.jsx`**: Defines and exports React components for SVG icons used in the application.
-
 ## Installation
 
 1. **Clone the repository:**
@@ -90,28 +68,6 @@ This project is an Authentication Template built using Laravel Jetstream, Inerti
 2. **Authentication:**
 
     The application includes user registration and login functionalities. Use the provided forms to create new accounts or log in.
-
-## Project Components
-
-### `AppNavbar`
-
--   **Description:** The main navigation bar of the application, containing links to different sections.
-
-### `SideNavbar`
-
--   **Description:** The sidebar navigation component with links for various sections.
-
-### `NavItems`
-
--   **Description:** Component for rendering navigation items based on the current URL and `sidebarView`.
-
-### `LoginForm`
-
--   **Description:** Component for user login with fields for username and password.
-
-### `RegisterForm`
-
--   **Description:** Component for user registration with fields for user details, contact information, and passwords.
 
 ## Contributing
 
