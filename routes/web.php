@@ -3,6 +3,7 @@
 // use Illuminate\Foundation\Application;
 
 use App\Http\Controllers\RegisterAdminController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -23,9 +24,13 @@ Route::middleware([
     Route::get('/', function () {
         return Inertia::render('Dashboard');
     })->name('home');
-    Route::get('/account/security', function () {
-        return Inertia::render('Account/Security');
-    })->name('account.security');
+
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('security', [UserProfileController::class, 'show'])->name('security');
+        Route::get('profile', function () {
+            return Inertia::render('Account/Profile');
+        })->name('profile');
+    });
 });
 
 Route::get('/register', [RegisterAdminController::class, 'create'])

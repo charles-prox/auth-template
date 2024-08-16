@@ -136,7 +136,7 @@ const AppNavbar = () => {
                                     <DropdownItem
                                         key="profile"
                                         as={Link}
-                                        // href={route("profile.edit")}
+                                        href={route("account.profile")}
                                         startContent={<UserIdIcon />}
                                         description="Update personal information and photo"
                                     >

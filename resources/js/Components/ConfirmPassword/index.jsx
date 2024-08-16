@@ -41,8 +41,8 @@ export const ConfirmPassword = ({
             .then((response) => {
                 setProcessing(false);
                 setPassword("");
-                onClose();
                 onSuccess(true);
+                onClose();
             })
             .catch((error) => {
                 setProcessing(false);
