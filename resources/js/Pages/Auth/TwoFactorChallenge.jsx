@@ -11,7 +11,10 @@ const TwoFactorChallenge = () => {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("two-factor.login"), { replace: true });
+        post(route("two-factor.login"), {
+            replace: true,
+            onSuccess: () => reset(),
+        });
     };
 
     return (
@@ -89,7 +92,11 @@ const TwoFactorChallenge = () => {
                             </Button>
                         )}
 
-                        <Button color="primary" type="submit">
+                        <Button
+                            color="primary"
+                            type="submit"
+                            isLoading={processing}
+                        >
                             Log in
                         </Button>
                     </div>
