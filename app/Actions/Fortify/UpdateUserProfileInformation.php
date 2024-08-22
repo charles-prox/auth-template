@@ -17,22 +17,41 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
+        dd($input);
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'position' => ['required', 'string', 'max:255'],
+            'contact_no' => ['required', 'string', 'max:255'],
+            // 'pro_code' => ['integer'],
+            'employment_status' => ['required', 'string', 'max:255'],
+            'office_id' => ['required', 'integer'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
+        // dd($input['photo']);
 
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
+        if (
+            $input['email'] !== $user->email &&
+            $user instanceof MustVerifyEmail
+        ) {
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
-                'name' => $input['name'],
+                'user_id' => $input['user_id'],
+                'first_name' => $input['first_name'],
+                'middle_name' => $input['middle_name'],
+                'last_name' => $input['last_name'],
+                'position' => $input['position'],
+                'contact_no' => $input['contact_no'],
+                'employment_status' => $input['employment_status'],
+                'office_id' => $input['office_id'],
                 'email' => $input['email'],
             ])->save();
         }

@@ -26,11 +26,11 @@ export const LoginForm = () => {
 
     return (
         <>
-            {errors.message && (
+            {errors.hris_id && (
                 <Alert
                     title="Login failed."
                     type="error"
-                    message={errors.message}
+                    message={errors.hris_id}
                     variant={"flat"}
                 />
             )}

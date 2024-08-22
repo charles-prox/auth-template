@@ -2,6 +2,7 @@
 
 // use Illuminate\Foundation\Application;
 
+use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\RegisterAdminController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,7 @@ Route::middleware([
         Route::get('profile', function () {
             return Inertia::render('Account/Profile');
         })->name('profile');
+        Route::post('profile/update', [UpdateUserProfileInformation::class, 'update'])->name('profile.update');
     });
 });
 
