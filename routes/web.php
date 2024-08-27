@@ -2,7 +2,7 @@
 
 // use Illuminate\Foundation\Application;
 
-use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Controllers\UpdateUserProfileController;
 use App\Http\Controllers\RegisterAdminController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,9 +31,10 @@ Route::middleware([
         Route::get('profile', function () {
             return Inertia::render('Account/Profile');
         })->name('profile');
-        Route::post('profile/update', [UpdateUserProfileInformation::class, 'update'])->name('profile.update');
+        Route::post('profile/update', [UpdateUserProfileController::class, 'update'])->middleware([config('fortify.auth_middleware', 'auth') . ':' . config('fortify.guard')])->name('profile.update');
     });
 });
+
 
 Route::get('/register', [RegisterAdminController::class, 'create'])
     ->middleware(['guest'])

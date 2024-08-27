@@ -68,6 +68,16 @@ export const asset = (path) => {
 };
 
 /**
+ * Generates a URL for displaying any assets stored in the storage folder that is linked to the public directory.
+ *
+ * @param {string} path - The relative path of the image within the storage folder.
+ * @returns {string} - The full URL to access the image.
+ */
+export const url = (path) => {
+    return `/storage/${path}`;
+};
+
+/**
  * Converts a given string to title case, where the first letter of each word is capitalized.
  *
  * @param {string} str - The input string to be converted.

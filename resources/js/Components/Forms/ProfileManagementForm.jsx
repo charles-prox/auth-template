@@ -10,24 +10,27 @@ import {
     AutocompleteItem,
     Spacer,
 } from "@nextui-org/react";
-import { useForm, usePage } from "@inertiajs/react";
-import { toTitleCase } from "@/utils/helpers";
+import { router, useForm, usePage } from "@inertiajs/react";
+import { toTitleCase, url } from "@/utils/helpers";
 import Alert from "../Alert";
 import { employmentStatus } from "@/utils/constants";
 import ModalAlert from "../ModalAlert";
+import Dropzone from "react-dropzone";
 
 export const ProfileManagementForm = ({
     enableEdit,
     setEnableEdit,
     onSubmit,
+    isProcessing,
 }) => {
     const formRef = React.useRef(null);
-    const fileInputRef = React.useRef(null);
     const { auth, offices } = usePage().props;
     const [isAlertOpen, setIsAlertOpen] = React.useState(false);
     const [currentPhoto, setCurrentPhoto] = React.useState(null);
+    const [dropError, setDropError] = React.useState("");
+    const [fileName, setFileName] = React.useState("");
     const { data, setData, post, errors, processing, reset } = useForm({
-        _method: "PUT", //add this line
+        hris_id: "",
         user_id: "",
         first_name: "",
         middle_name: "",
@@ -43,46 +46,38 @@ export const ProfileManagementForm = ({
 
     const submit = (event) => {
         event.preventDefault();
-        console.log("data: " + JSON.stringify(data));
 
-        post(route("account.profile.update"), data, {
-            forceFormData: true,
+        post(route("account.profile.update"), {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
                 setIsAlertOpen(true);
-            },
-            onFinish: () => {
                 setEnableEdit(false);
             },
+            onFinish: () => {},
         });
     };
 
-    const selectNewPhoto = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click(); // Trigger the file input click
-        }
-    };
-
-    const handleFileChange = (event) => {
-        const files = event.target.files;
+    const handleFileChange = (files) => {
         if (files.length > 0) {
             const file = files[0];
 
             // Check file type
             if (!file.type.startsWith("image/")) {
-                console.log("Selected file is not an image.");
+                setDropError("Selected file is not an image.");
                 return;
             }
 
             // Optionally check file size (e.g., limit to 5MB)
             const maxSize = 10 * 1024 * 1024; // 5MB
             if (file.size > maxSize) {
-                console.log("File is too large.");
+                setDropError("File is too large.");
                 return;
             }
 
-            console.log("Selected file:", file);
+            // console.log("Selected file:", file);
+            // console.log("file name:", file.name);
+            setFileName(file.name);
             setData("photo", file);
 
             const reader = new FileReader();
@@ -91,13 +86,25 @@ export const ProfileManagementForm = ({
             };
             reader.readAsDataURL(file);
         } else {
-            console.log("No file selected.");
+            setDropError("No file selected.");
         }
+    };
+
+    const handleRemovePhoto = () => {
+        router.delete(route("current-user-photo.destroy"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+                setIsAlertOpen(true);
+                setEnableEdit(false);
+            },
+        });
     };
 
     React.useEffect(() => {
         if (auth.user) {
             setData({
+                hris_id: auth.user.hris_id || "",
                 user_id: auth.user.user_id || "",
                 first_name: auth.user.first_name || "",
                 middle_name: auth.user.middle_name || "",
@@ -107,7 +114,6 @@ export const ProfileManagementForm = ({
                 contact_no: auth.user.contact_no || "",
                 employment_status: auth.user.employment_status || "",
                 office_id: auth.user.office_id || "",
-                photo: auth.user.profile_photo_path || "",
             });
         }
     }, [auth]);
@@ -119,6 +125,10 @@ export const ProfileManagementForm = ({
             }
         }
     }, [onSubmit]);
+
+    React.useEffect(() => {
+        isProcessing(processing);
+    }, [processing]);
 
     return (
         <React.Fragment>
@@ -159,39 +169,136 @@ export const ProfileManagementForm = ({
                             <Card>
                                 <CardBody className="p-0">
                                     <div className="flex flex-col gap-5 p-8">
-                                        <div className="flex gap-3">
+                                        <div className="flex gap-3 items-center">
                                             <Avatar
                                                 src={
                                                     currentPhoto ||
-                                                    auth.user.profile_photo_url
+                                                    (auth?.user
+                                                        .profile_photo_path
+                                                        ? url(
+                                                              auth?.user
+                                                                  .profile_photo_path
+                                                          )
+                                                        : auth?.user
+                                                              .profile_photo_url)
                                                 }
-                                                showFallback
-                                                name="CC"
                                                 className="min-w-36 min-h-36 text-large bg-transparent"
                                             />
                                             {enableEdit && (
-                                                <React.Fragment>
-                                                    <input
-                                                        ref={fileInputRef}
-                                                        id="photo"
-                                                        name="photo"
-                                                        type="file"
-                                                        className="hidden"
-                                                        accept="image/*"
-                                                        onChange={
-                                                            handleFileChange
+                                                <div className="flex flex-col gap-1 items-center">
+                                                    <Dropzone
+                                                        onDrop={(files) =>
+                                                            handleFileChange(
+                                                                files
+                                                            )
                                                         }
-                                                    />
+                                                        multiple={false}
+                                                        onDropAccepted={() => {
+                                                            setDropError("");
+                                                        }}
+                                                        onDropRejected={() => {
+                                                            setDropError(
+                                                                "The selected file is not a valid image."
+                                                            );
+                                                        }}
+                                                        accept={{
+                                                            "image/jpeg": [
+                                                                ".jpeg",
+                                                                ".jpg",
+                                                            ],
+                                                            "image/png": [
+                                                                ".png",
+                                                            ],
+                                                        }}
+                                                    >
+                                                        {({
+                                                            getRootProps,
+                                                            getInputProps,
+                                                        }) => (
+                                                            <div className="container flex items-center justify-center max-w-md">
+                                                                <div
+                                                                    {...getRootProps(
+                                                                        {
+                                                                            className:
+                                                                                "dropzone",
+                                                                        }
+                                                                    )}
+                                                                    className={`border-3 border-dashed rounded-md p-5 hover:cursor-pointer ${
+                                                                        errors
+                                                                            .updateProfileInformation
+                                                                            ?.photo ||
+                                                                        (dropError &&
+                                                                            "border-red-300")
+                                                                    }`}
+                                                                >
+                                                                    <input
+                                                                        {...getInputProps()}
+                                                                    />
+                                                                    <p className="text-sm text-center text-default-500">
+                                                                        Drag and
+                                                                        drop
+                                                                        your
+                                                                        image
+                                                                        here, or
+                                                                        click to
+                                                                        select a
+                                                                        file.
+                                                                    </p>
+                                                                    <p className="text-sm text-center text-default-500">
+                                                                        Accepted
+                                                                        formats:
+                                                                        JPG,
+                                                                        JPEG,
+                                                                        PNG. Max
+                                                                        file
+                                                                        size:
+                                                                        10MB.
+                                                                    </p>
+                                                                    {fileName && (
+                                                                        <p className="text-sm text-center text-default-500 pt-2">
+                                                                            Selected
+                                                                            file:{" "}
+                                                                            <span className="font-bold text-default-700">
+                                                                                {
+                                                                                    fileName
+                                                                                }
+                                                                            </span>
+                                                                        </p>
+                                                                    )}
+
+                                                                    {(errors
+                                                                        .updateProfileInformation
+                                                                        ?.photo ||
+                                                                        dropError) && (
+                                                                        <p className="text-xs text-red-500 text-center pt-2">
+                                                                            {dropError ||
+                                                                                errors
+                                                                                    .updateProfileInformation
+                                                                                    ?.photo}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Dropzone>
+                                                    <p className="text-xs text-default-500">
+                                                        or
+                                                    </p>
                                                     <Button
+                                                        size="sm"
+                                                        color="danger"
+                                                        variant="flat"
+                                                        className="max-w-36"
                                                         onPress={() =>
-                                                            selectNewPhoto()
+                                                            handleRemovePhoto()
                                                         }
                                                     >
-                                                        Select new photo
+                                                        Remove Photo
                                                     </Button>
-                                                </React.Fragment>
+                                                </div>
                                             )}
                                         </div>
+
                                         <Input
                                             type="text"
                                             name="first_name"
@@ -392,6 +499,39 @@ export const ProfileManagementForm = ({
                             <Card>
                                 <CardBody className="p-0">
                                     <div className="flex flex-col gap-5 p-8">
+                                        <Input
+                                            type="text"
+                                            name="hris_id"
+                                            id="hris_id"
+                                            label="HRIS ID"
+                                            labelPlacement="outside"
+                                            value={data.hris_id}
+                                            isInvalid={
+                                                !!errors
+                                                    .updateProfileInformation
+                                                    ?.hris_id
+                                            }
+                                            errorMessage={
+                                                errors.updateProfileInformation
+                                                    ?.hris_id
+                                            }
+                                            onChange={(e) =>
+                                                setData(
+                                                    "hris_id",
+                                                    e.target.value
+                                                )
+                                            }
+                                            classNames={{
+                                                label: "text-black dark:text-white/90 font-bold",
+                                                inputWrapper:
+                                                    "border-slate-400",
+                                                base: "max-w-lg",
+                                            }}
+                                            variant={enableEdit && "bordered"}
+                                            isRequired={enableEdit}
+                                            isReadOnly={!enableEdit}
+                                        />
+
                                         {!enableEdit ? (
                                             <Input
                                                 type="text"
@@ -404,7 +544,7 @@ export const ProfileManagementForm = ({
                                                         (office) =>
                                                             office.id ===
                                                             data.office_id
-                                                    )?.name
+                                                    )?.name || ""
                                                 }
                                                 classNames={{
                                                     label: "text-black dark:text-white/90 font-bold",

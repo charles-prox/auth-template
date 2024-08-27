@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { usePage, useForm, Link } from "@inertiajs/react";
-import { asset } from "@/utils/helpers";
+import { asset, url } from "@/utils/helpers";
 import {
     Dropdown,
     DropdownTrigger,
@@ -123,9 +123,14 @@ const AppNavbar = () => {
                                             description={auth?.user?.position}
                                             avatarProps={{
                                                 showFallback: true,
-                                                src:
-                                                    "https://i.pravatar.cc/150?u=a04258114e29026702d" ||
-                                                    asset("avatar1.jpg"),
+                                                src: auth?.user
+                                                    .profile_photo_path
+                                                    ? url(
+                                                          auth?.user
+                                                              .profile_photo_path
+                                                      )
+                                                    : auth?.user
+                                                          .profile_photo_url,
                                                 fallback: <UserIcon />,
                                             }}
                                         />

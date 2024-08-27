@@ -7,6 +7,7 @@ import React from "react";
 const Profile = () => {
     const [enableEdit, setEnableEdit] = React.useState(false);
     const [onSubmit, setOnSubmit] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     return (
         <React.Fragment>
@@ -23,13 +24,22 @@ const Profile = () => {
                         </p>
                     </div>
                     {enableEdit ? (
-                        <Button
-                            color="primary"
-                            onPress={() => setOnSubmit(true)}
-                            startContent={<SaveIcon />}
-                        >
-                            Save Changes
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                color="danger"
+                                onPress={() => setEnableEdit(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                color="primary"
+                                onPress={() => setOnSubmit(true)}
+                                startContent={<SaveIcon />}
+                                isLoading={loading}
+                            >
+                                Save Changes
+                            </Button>
+                        </div>
                     ) : (
                         <Button
                             color="primary"
@@ -48,6 +58,7 @@ const Profile = () => {
                         setOnSubmit(false);
                     }}
                     onSubmit={onSubmit}
+                    isProcessing={(state) => setLoading(state)}
                 />
             </div>
         </React.Fragment>
