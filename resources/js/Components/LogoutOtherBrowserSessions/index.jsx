@@ -6,6 +6,7 @@ import { ConfirmPassword } from "../ConfirmPassword";
 
 export const LogoutOtherBrowserSessions = () => {
     const { sessions } = usePage().props;
+    const [processing, setProcessing] = React.useState(false);
     const [openConfirmPasswordForm, setOpenConfirmPasswordForm] =
         React.useState(false);
 
@@ -13,7 +14,7 @@ export const LogoutOtherBrowserSessions = () => {
         router.delete(route("other-browser-sessions.destroy"), {
             preserveScroll: true,
             onSuccess: () => {
-                // open success alert
+                setProcessing(false);
             },
         });
     };
@@ -92,6 +93,7 @@ export const LogoutOtherBrowserSessions = () => {
                                     onPress={() =>
                                         setOpenConfirmPasswordForm(true)
                                     }
+                                    isLoading={processing}
                                 >
                                     Log Out Other Browser Sessions
                                 </Button>
@@ -108,7 +110,6 @@ export const LogoutOtherBrowserSessions = () => {
                 isOpen={openConfirmPasswordForm}
                 onClose={() => {
                     setOpenConfirmPasswordForm(false);
-                    setProcessing(false);
                 }}
                 onSuccess={() => {
                     setOpenConfirmPasswordForm(false);

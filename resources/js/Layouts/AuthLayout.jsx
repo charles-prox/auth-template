@@ -9,7 +9,8 @@ export default function AuthLayout({ children }) {
         <div className="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100">
             <Card
                 className={`w-full max-w-full px-6 py-4 bg-white overflow-hidden ${
-                    component.startsWith("Auth")
+                    component === "Auth/Login" ||
+                    component === "Auth/TwoFactorChallenge"
                         ? "sm:max-w-md"
                         : "sm:max-w-4xl"
                 }`}

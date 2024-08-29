@@ -20,8 +20,11 @@ class AdminCheck
         $superAdminExists = User::whereHas('roles', function ($query) {
             $query->where('name', 'super-admin');
         })->exists();
-        if ($superAdminExists) {
-            return redirect('/login'); // Redirect to home or any other page
+        if ($superAdminExists && $request->is('register')) {
+            return redirect('/login'); // Redirect to login
+        }
+        if (!$superAdminExists && $request->is('login')) {
+            return redirect('/register'); // Redirect to register 
         }
         return $next($request);
     }

@@ -1,3 +1,4 @@
+import DeleteAccount from "@/Components/DeleteAccount";
 import { EditIcon, SaveIcon } from "@/Components/Forms/icons";
 import { ProfileManagementForm } from "@/Components/Forms/ProfileManagementForm";
 import { Head } from "@inertiajs/react";
@@ -60,6 +61,7 @@ const Profile = () => {
                     onSubmit={onSubmit}
                     isProcessing={(state) => setLoading(state)}
                 />
+                <DeleteAccount />
             </div>
         </React.Fragment>
     );

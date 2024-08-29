@@ -2,20 +2,13 @@
 
 // use Illuminate\Foundation\Application;
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UpdateUserProfileController;
 use App\Http\Controllers\RegisterAdminController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Route::get('/', function () {
-//     return Inertia::render('Dashboard', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
 Route::middleware([
     'auth:sanctum',
@@ -39,3 +32,7 @@ Route::middleware([
 Route::get('/register', [RegisterAdminController::class, 'create'])
     ->middleware(['guest'])
     ->name('register');
+
+Route::get('/login', [LoginController::class, 'create'])
+    ->middleware(['guest'])
+    ->name('login');

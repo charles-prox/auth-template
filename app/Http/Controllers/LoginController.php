@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\AdminCheck;
-use Laravel\Fortify\Http\Controllers\RegisteredUserController as JetstreamRegisteredUserController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-class RegisterAdminController extends JetstreamRegisteredUserController
+class LoginController extends AuthenticatedSessionController
 {
     // Add your custom middleware to the constructor
     public function __construct()

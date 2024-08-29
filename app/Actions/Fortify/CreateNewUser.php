@@ -31,7 +31,7 @@ class CreateNewUser implements CreatesNewUsers
             'hris_id' => ['required', 'string', 'max:255'],
             'user_id' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'contact_no' => ['required', 'string', 'max:255'],

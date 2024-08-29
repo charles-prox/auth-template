@@ -14,9 +14,12 @@ import { useTheme } from "@/ThemeProvider";
 export const ConfirmPassword = ({
     isOpen,
     onClose,
+    onSubmit,
     title,
     content,
     onSuccess,
+    errors: outsideError,
+    processing: outsideProcessing,
 }) => {
     const defaults = {
         title: title || "Confirm Password",
@@ -34,21 +37,30 @@ export const ConfirmPassword = ({
         e.preventDefault();
         setProcessing(true);
 
-        axios
-            .post(route("password.confirm"), {
-                password: password,
-            })
-            .then((response) => {
-                setProcessing(false);
-                setPassword("");
-                onSuccess(true);
-                onClose();
-            })
-            .catch((error) => {
-                setProcessing(false);
-                setError(error.response?.data.message);
-            });
+        if (typeof onSubmit === "function") {
+            onSubmit(password);
+        } else {
+            axios
+                .post(route("password.confirm"), {
+                    password: password,
+                })
+                .then((response) => {
+                    setProcessing(false);
+                    setPassword("");
+                    onSuccess(true);
+                    onClose();
+                })
+                .catch((error) => {
+                    setProcessing(false);
+                    setError(error.response?.data.message);
+                });
+        }
     };
+
+    React.useEffect(() => {
+        outsideError && setError(outsideError.password);
+        setProcessing(outsideProcessing);
+    }, [outsideError, outsideProcessing]);
 
     return (
         <React.Fragment>
@@ -99,7 +111,7 @@ export const ConfirmPassword = ({
                             <Button
                                 color="primary"
                                 type="submit"
-                                isLoading={processing}
+                                isLoading={outsideProcessing || processing}
                             >
                                 Confirm
                             </Button>
