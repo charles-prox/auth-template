@@ -2,38 +2,38 @@
 
 ## Overview
 
-This project is an Authentication Template built using Laravel Jetstream, Inertia, React, and NextUI. It provides a modern and user-friendly authentication system with features such as registration, login, and password management.
+This project is an Authentication Template built using Laravel Jetstream, Inertia, React, and NextUI. It provides a modern and user-friendly authentication system with features such as registration, login, password management, profile management, and security management.
 
 ## Technologies Used
 
--   **Backend:** Laravel Jetstream
--   **Frontend:** React, NextUI
--   **State Management:** React's Context API
--   **Form Handling:** Inertia.js
--   **UI Components:** NextUI
+-   **Backend**: Laravel Jetstream
+-   **Frontend**: React, NextUI
+-   **State Management**: React's Context API
+-   **Form Handling**: Inertia.js
+-   **UI Components**: NextUI
 
 ## Installation
 
-1. **Clone the repository:**
+1. **Clone the repository**:
 
     ```bash
     git clone <repository-url>
     cd <repository-directory>
     ```
 
-2. **Install PHP dependencies:**
+2. **Install PHP dependencies**:
 
     ```bash
     composer install
     ```
 
-3. **Install JavaScript dependencies:**
+3. **Install JavaScript dependencies**:
 
     ```bash
     npm install
     ```
 
-4. **Set up the environment file:**
+4. **Set up the environment file**:
 
     Copy the `.env.example` file to `.env` and configure the environment variables as needed.
 
@@ -41,19 +41,19 @@ This project is an Authentication Template built using Laravel Jetstream, Inerti
     cp .env.example .env
     ```
 
-5. **Generate the application key:**
+5. **Generate the application key**:
 
     ```bash
     php artisan key:generate
     ```
 
-6. **Run the database migrations:**
+6. **Run the database migrations**:
 
     ```bash
     php artisan migrate
     ```
 
-7. **Start the development server:**
+7. **Start the development server**:
 
     ```bash
     npm run dev
@@ -61,13 +61,27 @@ This project is an Authentication Template built using Laravel Jetstream, Inerti
 
 ## Usage
 
-1. **Access the application:**
+1. **Access the application**:
 
     Open your browser and navigate to `http://localhost:3000` to access the application.
 
-2. **Authentication:**
+2. **Authentication**:
 
     The application includes user registration and login functionalities. Use the provided forms to create new accounts or log in.
+
+3. **Profile Management**:
+
+    Users can manage their personal information, including updating their profile details and uploading a profile picture.
+
+4. **Security Management**:
+
+    Users can manage security settings, such as updating passwords and managing two-factor authentication.
+
+## Version 1.1.0 - Release Notes
+
+-   **Profile Management**: Added features for managing user profiles, including updating personal information and profile photos.
+-   **Security Management**: Added security features, including password updates and two-factor authentication management.
+-   **Enhanced UI/UX**: Improved the user interface and experience across the application with NextUI components.
 
 ## Contributing
 
@@ -81,4 +95,4 @@ If you wish to contribute to this project, please follow these guidelines:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.

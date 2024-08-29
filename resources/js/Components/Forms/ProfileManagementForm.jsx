@@ -69,7 +69,7 @@ export const ProfileManagementForm = ({
             }
 
             // Optionally check file size (e.g., limit to 5MB)
-            const maxSize = 10 * 1024 * 1024; // 5MB
+            const maxSize = 5 * 1024 * 1024; // 5MB
             if (file.size > maxSize) {
                 setDropError("File is too large.");
                 return;

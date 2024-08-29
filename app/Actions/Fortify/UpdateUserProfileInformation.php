@@ -29,7 +29,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'employment_status' => ['required', 'string', 'max:255'],
             'office_id' => ['required', 'integer'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:10240'],
+            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:5120'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
