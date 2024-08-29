@@ -71,17 +71,11 @@ This project is an Authentication Template built using Laravel Jetstream, Inerti
 
 3. **Profile Management**:
 
-    Users can manage their personal information, including updating their profile details and uploading a profile picture.
+    Users can manage their personal information, including updating their profile details, uploading a profile picture and deleting thier accounts permanently.
 
 4. **Security Management**:
 
     Users can manage security settings, such as updating passwords and managing two-factor authentication.
-
-## Version 1.1.0 - Release Notes
-
--   **Profile Management**: Added features for managing user profiles, including updating personal information and profile photos.
--   **Security Management**: Added security features, including password updates and two-factor authentication management.
--   **Enhanced UI/UX**: Improved the user interface and experience across the application with NextUI components.
 
 ## Contributing
 
