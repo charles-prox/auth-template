@@ -1,11 +1,11 @@
 import { useForm } from "@inertiajs/react";
 import { Button, Card, CardBody, Divider } from "@nextui-org/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ConfirmPassword } from "../ConfirmPassword";
 
 const DeleteAccount = () => {
     const [openConfirmPasswordForm, setOpenConfirmPasswordForm] =
-        React.useState(false);
+        useState(false);
     const {
         data,
         setData,
@@ -19,23 +19,23 @@ const DeleteAccount = () => {
     const deleteUser = () => {
         destroy(route("current-user.destroy"), {
             preserveScroll: true,
-            // onFinish: () => {},
         });
     };
 
-    React.useEffect(() => {
-        data.password && deleteUser();
+    // Trigger deleteUser when data.password is updated
+    useEffect(() => {
+        if (data.password) {
+            deleteUser();
+        }
     }, [data]);
 
     return (
-        <React.Fragment>
+        <>
             <Divider />
             <div className="grid grid-cols-12 gap-3">
                 <div className="col-span-12 md:col-span-4">
                     <h2 className="text-md font-bold">Delete Account</h2>
-                    <p className="text-sm mx-w-">
-                        Permanently delete your account.
-                    </p>
+                    <p className="text-sm">Permanently delete your account.</p>
                 </div>
                 <div className="col-span-12 md:col-span-8">
                     <Card>
@@ -51,9 +51,9 @@ const DeleteAccount = () => {
                             </div>
                             <div className="px-8 py-5 bg-slate-400/10 text-right">
                                 <Button
-                                    onPress={() => {
-                                        setOpenConfirmPasswordForm(true);
-                                    }}
+                                    onPress={() =>
+                                        setOpenConfirmPasswordForm(true)
+                                    }
                                     isLoading={processing}
                                     color="danger"
                                 >
@@ -65,23 +65,15 @@ const DeleteAccount = () => {
                 </div>
             </div>
             <ConfirmPassword
-                title={"Delete Account"}
-                content={
-                    "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
-                }
+                title="Delete Account"
+                content="Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
                 isOpen={openConfirmPasswordForm}
-                onClose={() => {
-                    setOpenConfirmPasswordForm(false);
-                }}
-                onSuccess={() => {
-                    setOpenConfirmPasswordForm(false);
-                    deleteUser();
-                }}
+                onClose={() => setOpenConfirmPasswordForm(false)}
                 onSubmit={(pass) => setData("password", pass)}
                 errors={errors}
                 processing={processing}
             />
-        </React.Fragment>
+        </>
     );
 };
 

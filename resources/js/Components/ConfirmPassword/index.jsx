@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Modal,
     ModalContent,
@@ -21,12 +21,6 @@ export const ConfirmPassword = ({
     errors: outsideError,
     processing: outsideProcessing,
 }) => {
-    const defaults = {
-        title: title || "Confirm Password",
-        content:
-            content ||
-            "For your security, please confirm your password to continue.",
-    };
     const [isVisible, setIsVisible] = React.useState(false);
     const [password, setPassword] = React.useState("");
     const [error, setError] = React.useState("");
@@ -44,7 +38,7 @@ export const ConfirmPassword = ({
                 .post(route("password.confirm"), {
                     password: password,
                 })
-                .then((response) => {
+                .then(() => {
                     setProcessing(false);
                     setPassword("");
                     onSuccess(true);
@@ -57,68 +51,67 @@ export const ConfirmPassword = ({
         }
     };
 
-    React.useEffect(() => {
-        outsideError && setError(outsideError.password);
+    useEffect(() => {
+        if (outsideError) setError(outsideError.password);
         setProcessing(outsideProcessing);
     }, [outsideError, outsideProcessing]);
 
     return (
-        <React.Fragment>
-            <Modal
-                isOpen={isOpen}
-                isDismissable={false}
-                isKeyboardDismissDisabled={true}
-                placement={"top"}
-                className={`${theme} text-foreground`}
-            >
-                <ModalContent>
-                    <form onSubmit={submit}>
-                        <ModalHeader className="flex flex-col gap-1">
-                            {defaults.title}
-                        </ModalHeader>
-                        <ModalBody>
-                            <p>{defaults.content}</p>
-                            <Input
-                                type={isVisible ? "text" : "password"}
-                                name="password"
-                                id="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                isInvalid={!!error}
-                                errorMessage={error}
-                                onChange={(e) => setPassword(e.target.value)}
-                                classNames={{
-                                    label: "text-black dark:text-white/90 font-bold",
-                                    inputWrapper: "border-slate-400",
-                                }}
-                                endContent={
-                                    <PasswordVisibilityButton
-                                        handleState={(state) =>
-                                            setIsVisible(state)
-                                        }
-                                    />
-                                }
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                color="danger"
-                                variant="light"
-                                onPress={onClose}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                color="primary"
-                                type="submit"
-                                isLoading={outsideProcessing || processing}
-                            >
-                                Confirm
-                            </Button>
-                        </ModalFooter>
-                    </form>
-                </ModalContent>
-            </Modal>
-        </React.Fragment>
+        <Modal
+            isOpen={isOpen}
+            isDismissable={false}
+            isKeyboardDismissDisabled={true}
+            placement="top"
+            className={`${theme} text-foreground`}
+        >
+            <ModalContent>
+                <form onSubmit={submit}>
+                    <ModalHeader className="flex flex-col gap-1">
+                        {title || "Confirm Password"}
+                    </ModalHeader>
+                    <ModalBody>
+                        <p>
+                            {content ||
+                                "For your security, please confirm your password to continue."}
+                        </p>
+                        <Input
+                            type={isVisible ? "text" : "password"}
+                            name="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            isInvalid={!!error}
+                            errorMessage={error}
+                            onChange={(e) => setPassword(e.target.value)}
+                            classNames={{
+                                label: "text-black dark:text-white/90 font-bold",
+                                inputWrapper: "border-slate-400",
+                            }}
+                            endContent={
+                                <PasswordVisibilityButton
+                                    handleState={(state) => setIsVisible(state)}
+                                />
+                            }
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            color="danger"
+                            variant="light"
+                            onPress={onClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            color="primary"
+                            type="submit"
+                            isLoading={processing}
+                        >
+                            Confirm
+                        </Button>
+                    </ModalFooter>
+                </form>
+            </ModalContent>
+        </Modal>
     );
 };
